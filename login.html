@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Login — WellKind Provisions</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#223B1C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEE8D6; --paper-light:#F8F5EA; --ink:#23301D; --ink-soft:#4B5940;
+    --green:#3C6B2E; --green-deep:#223B1C; --amber:#B07E2E; --amber-deep:#8A611F;
+    --line:rgba(34,59,28,0.22); --line-soft:rgba(34,59,28,0.12); --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Archivo', system-ui, sans-serif; font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column;
+  }
+  a{color:inherit;}
+  header{border-bottom:1px solid var(--line);}
+  .nav{max-width:1120px; margin:0 auto; padding:12px 32px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .nav img{height:56px; width:auto; display:block;}
+  .back{font-size:0.92rem; font-weight:500; text-decoration:none; border-bottom:1px solid var(--amber); padding-bottom:2px;}
+  .back:hover{color:var(--green-deep);}
+
+  main{flex:1; display:flex; align-items:center; justify-content:center; padding:56px 16px;}
+  .card{width:100%; max-width:420px; background:var(--paper-light); border:1px solid var(--line); padding:36px 32px 30px;}
+  .kicker{display:block; font-weight:700; font-size:0.8rem; color:var(--amber-deep); margin-bottom:8px;}
+  h1{font-family:'Fraunces', Georgia, serif; font-weight:500; color:var(--green-deep); font-size:1.9rem; line-height:1.15; margin:0 0 8px; letter-spacing:-0.01em;}
+  .sub{color:var(--ink-soft); font-size:0.94rem; margin:0 0 26px;}
+
+  .field{margin-bottom:18px;}
+  label{display:block; font-size:0.82rem; font-weight:600; margin-bottom:6px; color:var(--green-deep);}
+  input{width:100%; padding:11px 12px; border:1px solid var(--line); background:var(--white); font-family:inherit; font-size:0.96rem; color:var(--ink);}
+  input:focus{outline:2px solid var(--amber-deep); outline-offset:1px;}
+  .pw-wrap{position:relative;}
+  .pw-wrap input{padding-right:64px;}
+  .pw-toggle{position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; font:600 0.78rem 'Archivo',sans-serif; color:var(--green); cursor:pointer; padding:6px 8px;}
+  .row{display:flex; justify-content:space-between; align-items:center; gap:12px; margin:-4px 0 22px; font-size:0.85rem;}
+  .row label{display:flex; align-items:center; gap:8px; margin:0; font-weight:500; color:var(--ink-soft);}
+  .row input{width:auto;}
+  .row a{color:var(--green-deep); text-decoration:none; border-bottom:1px solid var(--amber);}
+
+  .btn{display:block; width:100%; font:600 0.95rem 'Archivo',sans-serif; padding:13px 22px; border:1px solid var(--green-deep); background:var(--green-deep); color:var(--white); cursor:pointer;}
+  .btn:hover{background:var(--green);}
+  .notice{display:none; margin-top:18px; padding:14px 16px; border-left:3px solid var(--amber); background:var(--white); font-size:0.9rem; color:var(--ink);}
+  .notice.show{display:block;}
+  .help{margin:22px 0 0; padding-top:18px; border-top:1px solid var(--line-soft); font-size:0.85rem; color:var(--ink-soft);}
+  .help a{color:var(--green-deep); font-weight:600; text-decoration:none;}
+
+  footer{border-top:1px solid var(--line); padding:18px 32px; font-size:0.78rem; color:var(--ink-soft); text-align:center;}
+  :focus-visible{outline:2px solid var(--amber-deep); outline-offset:2px;}
+  @media(max-width:500px){ .nav{padding:12px 16px;} .nav img{height:44px;} .card{padding:28px 20px 24px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="index.html"><img src="wellkind-logo.png" alt="WellKind Provisions — back to home"></a>
+    <a href="index.html" class="back">← Back to site</a>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <span class="kicker">Customer portal</span>
+    <h1>Sign in to your account</h1>
+    <p class="sub">Manage your WellKind machines, product mix, and service requests.</p>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="userid">User ID</label>
+        <input id="userid" name="userid" type="text" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="pw-wrap">
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+          <button type="button" class="pw-toggle" id="pwToggle" aria-controls="password" aria-pressed="false">Show</button>
+        </div>
+      </div>
+      <div class="row">
+        <label><input type="checkbox" id="remember"> Remember me</label>
+        <a href="index.html#contact">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn">Sign in</button>
+      <div class="notice" id="notice" role="status" aria-live="polite"></div>
+    </form>
+
+    <p class="help">Need an account or help signing in? Call <a href="tel:16146008218">614.600.8218</a> or <a href="mailto:jessica@wellkindprovisions.com">email us</a>.</p>
+  </div>
+</main>
+
+<footer>© 2026 WellKind Provisions. All rights reserved.</footer>
+
+<script>
+  // Placeholder: online accounts aren't connected yet. Nothing typed here is sent or stored.
+  (function(){
+    var form = document.getElementById('loginForm');
+    var notice = document.getElementById('notice');
+    var pw = document.getElementById('password');
+    var toggle = document.getElementById('pwToggle');
+
+    toggle.addEventListener('click', function(){
+      var show = pw.type === 'password';
+      pw.type = show ? 'text' : 'password';
+      toggle.textContent = show ? 'Hide' : 'Show';
+      toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      pw.value = '';
+      notice.innerHTML = 'Online customer accounts are coming soon. For anything you need today, call <strong>614.600.8218</strong> or email <strong>jessica@wellkindprovisions.com</strong>.';
+      notice.classList.add('show');
+    });
+  })();
+</script>
+
+</body>
+</html>
