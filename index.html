@@ -36,7 +36,11 @@
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  /* Stop menu-link jumps just below the sticky header instead of under it.
+     --header-h tracks the header's real height (set by the script at the
+     bottom of the page; 110px fallback). Minus 44px so each section's kicker
+     lands ~30px under the header rather than after its full 74px padding. */
+  html{scroll-behavior:smooth; scroll-padding-top:calc(var(--header-h, 110px) - 44px);}
   body{
     margin:0;
     background:var(--paper);
@@ -668,6 +672,16 @@
 </footer>
 
 <script>
+  (function(){
+    var header = document.querySelector('header');
+    function setHeaderHeight(){
+      document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+    }
+    setHeaderHeight();
+    window.addEventListener('resize', setHeaderHeight);
+    if (window.ResizeObserver) new ResizeObserver(setHeaderHeight).observe(header);
+  })();
+
   document.getElementById('menuToggle').addEventListener('click', function(){
     var open = document.getElementById('navLinks').classList.toggle('open');
     this.setAttribute('aria-expanded', open ? 'true' : 'false');
