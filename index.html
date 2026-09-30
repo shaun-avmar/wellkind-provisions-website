@@ -601,10 +601,7 @@
         </ul>
         <p class="cta-phone">Prefer to talk it through? Call <a href="tel:16146008218">614.600.8218</a>.</p>
       </div>
-      <form class="inquiry" id="inquiryForm" action="https://formsubmit.co/jessica@wellkindprovisions.com" method="POST">
-        <input type="hidden" name="_subject" value="New WellKind inquiry from the website">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
+      <form class="inquiry" id="inquiryForm" method="POST" novalidate>
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="row2">
           <div class="field">
@@ -697,20 +694,25 @@
     var form = document.getElementById('inquiryForm');
     var note = form.querySelector('.form-note');
     var btn = form.querySelector('button[type="submit"]');
+    // Sent to our own form backend (saves the inquiry and emails it to Jessica via Resend).
+    var ENDPOINT = 'https://lfxumclplagzixwlwatn.supabase.co/functions/v1/wellkind-inquiry';
     form.addEventListener('submit', function(e){
       e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
       if (form._honey && form._honey.value) return;
       btn.disabled = true; btn.textContent = 'Sending…';
-      fetch('https://formsubmit.co/ajax/jessica@wellkindprovisions.com', {
+      var payload = {};
+      new FormData(form).forEach(function(v, k){ payload[k] = String(v); });
+      fetch(ENDPOINT, {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: new FormData(form)
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify(payload)
       })
-      .then(function(r){ return r.json(); })
+      .then(function(r){ return r.json().catch(function(){ return {}; }); })
       .then(function(data){
-        if (String(data.success) !== 'true') {
+        if (!data || data.ok !== true) {
           btn.disabled = false; btn.textContent = 'Submit';
-          note.textContent = data.message || 'Your message could not be sent. Please email jessica@wellkindprovisions.com or call 614.600.8218.';
+          note.textContent = (data && data.error) || 'Your message could not be sent. Please email jessica@wellkindprovisions.com or call 614.600.8218.';
           return;
         }
         form.reset();
