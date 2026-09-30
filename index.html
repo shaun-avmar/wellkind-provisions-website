@@ -640,7 +640,7 @@
           <label for="message">What should we know about your space?</label>
           <textarea id="message" name="message" placeholder="Foot traffic, headcount, current vending situation, anything else..."></textarea>
         </div>
-        <button class="btn" type="submit">Request a curated mix</button>
+        <button class="btn" type="submit">Submit</button>
         <p class="form-note" aria-live="polite">We'll follow up within one business day.</p>
       </form>
     </div>
@@ -709,7 +709,7 @@
       .then(function(r){ return r.json(); })
       .then(function(data){
         if (String(data.success) !== 'true') {
-          btn.disabled = false; btn.textContent = 'Request a curated mix';
+          btn.disabled = false; btn.textContent = 'Submit';
           note.textContent = data.message || 'Your message could not be sent. Please email jessica@wellkindprovisions.com or call 614.600.8218.';
           return;
         }
@@ -718,7 +718,7 @@
         btn.textContent = 'Sent';
       })
       .catch(function(){
-        btn.disabled = false; btn.textContent = 'Request a curated mix';
+        btn.disabled = false; btn.textContent = 'Submit';
         note.innerHTML = 'Something went wrong sending your message. Please email <a href="mailto:jessica@wellkindprovisions.com">jessica@wellkindprovisions.com</a> or call 614.600.8218.';
       });
     });
