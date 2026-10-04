@@ -57,6 +57,12 @@
   .notice.show{display:block;}
   .help{margin:22px 0 0; padding-top:18px; border-top:1px solid var(--line-soft); font-size:0.85rem; color:var(--ink-soft);}
   .help a{color:var(--green-deep); font-weight:600; text-decoration:none;}
+  .mail-fallback{display:none; margin-top:12px; padding:12px 14px; border-left:3px solid var(--amber); background:var(--white); font-size:0.85rem; color:var(--ink);}
+  .mail-fallback.show{display:block;}
+  .mail-fallback .addr{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:6px; flex-wrap:wrap;}
+  .mail-fallback strong{word-break:break-all;}
+  .copy-btn{font:600 0.78rem 'Archivo',sans-serif; color:var(--green-deep); background:none; border:1px solid var(--line); padding:5px 10px; cursor:pointer;}
+  .copy-btn:hover{border-color:var(--green-deep);}
 
   footer{border-top:1px solid var(--line); padding:18px 32px; font-size:0.78rem; color:var(--ink-soft); text-align:center;}
   :focus-visible{outline:2px solid var(--amber-deep); outline-offset:2px;}
@@ -98,7 +104,11 @@
       <div class="notice" id="notice" role="status" aria-live="polite"></div>
     </form>
 
-    <p class="help">Need an account or help signing in? Call <a href="tel:16146008218">614.600.8218</a> or <a href="mailto:jessica@wellkindprovisions.com">email us</a>.</p>
+    <p class="help">Need an account or help signing in? Call <a href="tel:16146008218">614.600.8218</a> or <a href="mailto:jessica@wellkindprovisions.com?subject=Customer%20portal%20help" id="emailLink">email us</a>.</p>
+    <div class="mail-fallback" id="mailFallback" role="status" aria-live="polite">
+      If your email app didn't open, send a note to:
+      <div class="addr"><strong>jessica@wellkindprovisions.com</strong> <button type="button" class="copy-btn" id="copyEmail">Copy address</button></div>
+    </div>
   </div>
 </main>
 
@@ -124,6 +134,33 @@
       pw.value = '';
       notice.innerHTML = 'Online customer accounts are coming soon. For anything you need today, call <strong>614.600.8218</strong> or email <strong>jessica@wellkindprovisions.com</strong>.';
       notice.classList.add('show');
+    });
+
+    // "Email us" opens the visitor's mail app; if none is set up the click does nothing,
+    // so always show the address with a copy button as a fallback.
+    var emailLink = document.getElementById('emailLink');
+    var fallback = document.getElementById('mailFallback');
+    var copyBtn = document.getElementById('copyEmail');
+    var address = 'jessica@wellkindprovisions.com';
+
+    emailLink.addEventListener('click', function(){
+      fallback.classList.add('show');
+    });
+
+    copyBtn.addEventListener('click', function(){
+      function done(){ copyBtn.textContent = 'Copied!'; setTimeout(function(){ copyBtn.textContent = 'Copy address'; }, 2000); }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(address).then(done, legacy);
+      } else {
+        legacy();
+      }
+      function legacy(){
+        var t = document.createElement('textarea');
+        t.value = address; t.setAttribute('readonly', ''); t.style.position = 'absolute'; t.style.left = '-9999px';
+        document.body.appendChild(t); t.select();
+        try { document.execCommand('copy'); done(); } catch (err) {}
+        document.body.removeChild(t);
+      }
     });
   })();
 </script>
